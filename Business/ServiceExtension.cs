@@ -7,10 +7,9 @@ namespace Business
     public static class ServiceExtension
     {
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
-        {
-            // Register your services with the DI container
+        {           
             services.AddScoped<ICharacterService, CharacterService>();
-
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             return services;
         }
     }

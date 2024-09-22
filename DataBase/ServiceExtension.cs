@@ -23,6 +23,7 @@ namespace DataBase
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<ICharacterRepository, CharacterRepository>();
+            services.AddScoped<IAuthenticationRepository, AuthenticationRepository>();
 
             return services;
         }

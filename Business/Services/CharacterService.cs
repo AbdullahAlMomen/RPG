@@ -14,10 +14,6 @@ namespace Business.Services
 {
     public class CharacterService : ICharacterService
     {
-        private List<Character> characters = new List<Character> {
-            new Character(){Id=1,Name="Momen"},
-            new Character(){Id=2,Name="Shovon"}
-            };
         private ILogger<CharacterService> _logger;
         private IUnitOfWork _unitOfWork;
         public CharacterService(ILogger<CharacterService> logger, IUnitOfWork unitOfWork)
@@ -55,7 +51,7 @@ namespace Business.Services
                 Character character = await _unitOfWork.CharacterRepository.GetById(id);
                 if (character != null)
                 {
-                    _unitOfWork.CharacterRepository.Delete(character);
+                    await _unitOfWork.CharacterRepository.Delete(character);
                     _unitOfWork.Save();
                     response.Data = character;
                     response.Success = true;
@@ -146,7 +142,7 @@ namespace Business.Services
                     character.Class = updatedcharacter.Class;
                     character.Name = updatedcharacter.Name;
                     character.HitPoints = updatedcharacter.HitPoints;
-                    _unitOfWork.CharacterRepository.Update(character);
+                   await _unitOfWork.CharacterRepository.Update(character);
                     _unitOfWork.Save();
 
                     response.Data = character;

@@ -11,14 +11,17 @@ namespace DataBase.UnitOfWorks
     {
         private readonly ApplicationDbContext _dbContext;
         public ICharacterRepository CharacterRepository { get; }
+        public IAuthenticationRepository AuthenticationRepository { get; }
 
-        
+
 
         public UnitOfWork(ApplicationDbContext dbContext,
-                           ICharacterRepository characterRepository)
+                           ICharacterRepository characterRepository,
+                           IAuthenticationRepository authenticationRepository)
         {
             _dbContext = dbContext;
             CharacterRepository = characterRepository;
+            AuthenticationRepository = authenticationRepository;
         }
 
         public int Save()

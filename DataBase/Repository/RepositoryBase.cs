@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -33,14 +34,18 @@ namespace DataBase.Repository
             await _dbContext.Set<T>().AddAsync(entity);
         }
 
-        public void Delete(T entity)
+        public async Task Delete(T entity)
         {
             _dbContext.Set<T>().Remove(entity);
         }
 
-        public void Update(T entity)
+        public async  Task Update(T entity)
         {
             _dbContext.Set<T>().Update(entity);
+        }
+        public async Task<T> Find(Expression<Func<T, bool>> predicate)
+        {
+            return await _dbContext.Set<T>().FirstOrDefaultAsync(predicate);
         }
     }
 }

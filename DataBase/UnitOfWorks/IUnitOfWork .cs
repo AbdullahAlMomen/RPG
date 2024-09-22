@@ -10,6 +10,7 @@ namespace DataBase.UnitOfWorks
     public interface IUnitOfWork : IDisposable
     {
         ICharacterRepository CharacterRepository { get; }
+        IAuthenticationRepository AuthenticationRepository { get; }
 
         int Save();
     }
