@@ -1,6 +1,5 @@
-﻿using Business.Models;
-using Business.Response;
-using Business.Services.IServices;
+﻿using Business.Services.IServices;
+using DataBase.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

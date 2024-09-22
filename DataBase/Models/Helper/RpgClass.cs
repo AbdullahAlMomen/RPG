@@ -1,4 +1,4 @@
-﻿namespace Business.Models
+﻿namespace DataBase.Models
 {
     public enum RpgClass
     {

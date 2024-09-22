@@ -1,4 +1,6 @@
-﻿namespace Business.Models
+﻿using DataBase;
+
+namespace DataBase.Models
 {
     public class Character
     {
@@ -8,5 +10,6 @@
         public int Strength { get; set; } = 10;
         public int Defence { get; set; } = 10;
         public RpgClass Class { get; set; } = RpgClass.Knight;
+        public User? User { get; set; }
     }
 }
