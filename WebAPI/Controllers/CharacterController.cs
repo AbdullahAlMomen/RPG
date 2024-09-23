@@ -3,6 +3,7 @@ using DataBase.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace WebAPI.Controllers
 {
@@ -13,10 +14,12 @@ namespace WebAPI.Controllers
     {
         private ILogger<CharacterController> _logger;
         private ICharacterService _characterService;
-        public CharacterController(ILogger<CharacterController> logger,ICharacterService characterService)
+        private IAuthenticationService _authenticationService;
+        public CharacterController(ILogger<CharacterController> logger,ICharacterService characterService, IAuthenticationService authenticationService)
         {
             _logger = logger;
             _characterService = characterService;
+            _authenticationService = authenticationService;
         }
 
         [HttpGet("GetCharacters")]
@@ -39,15 +42,18 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<CommonResponse<Character>>> AddCharacter([FromBody] Character character)
         {
             _logger.LogInformation("AddCharacter api call");
+            var username = User.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
+            var user = await _authenticationService.GetUserByUserName(username);
+            character.User = user.Data;
             CommonResponse<Character> response = await _characterService.AddCharacter(character);
-            return response;
+            return Ok(response);
         }
         [HttpPut("UpdateCharacter")]
         public async Task<ActionResult<CommonResponse<Character>>> UpdateCharacter([FromBody] Character character)
         {
             _logger.LogInformation("UpdateCharacter api call");
             CommonResponse<Character> response = await _characterService.UpdateCharacter(character);
-            return response;
+            return Ok(response);
         }
 
         [HttpDelete("DeleteCharacter")]

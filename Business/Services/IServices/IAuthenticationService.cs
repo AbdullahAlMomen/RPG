@@ -11,5 +11,6 @@ namespace Business.Services.IServices
     {
         Task<CommonResponse<string>>RegisterUser(Login loginUser);
         Task<CommonResponse<string>> Login(Login loginUser);
+        Task<CommonResponse<User>>GetUserByUserName(string userName);
     }
 }

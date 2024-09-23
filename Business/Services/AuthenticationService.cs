@@ -1,4 +1,5 @@
-﻿using Business.Services.IServices;
+﻿using Azure;
+using Business.Services.IServices;
 using DataBase.Models;
 using DataBase.Repository;
 using DataBase.UnitOfWorks;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -16,10 +18,10 @@ namespace Business.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        private ILogger<CharacterService> _logger;
+        private ILogger<AuthenticationService> _logger;
         private IUnitOfWork _unitOfWork;
         private readonly IConfiguration _config;
-        public AuthenticationService(ILogger<CharacterService> logger, IUnitOfWork unitOfWork, IConfiguration config)
+        public AuthenticationService(ILogger<AuthenticationService> logger, IUnitOfWork unitOfWork, IConfiguration config)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
@@ -34,7 +36,6 @@ namespace Business.Services
                 try
                 {
                     User user = new User();
-
                     CreatePasswordHash(loginUser.Password, out byte[] passwordHash, out byte[] passwordSalt);
                     user.UserName = loginUser.UserName;
                     user.PasswordHash = passwordHash;
@@ -106,15 +107,46 @@ namespace Business.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var claims = new List<Claim>
+            {
+                new Claim("UserName",user.UserName)
+            };
+
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
                 audience: _config["Jwt:Issuer"],
-                claims: null,
+                claims: claims,
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
+        public async Task<CommonResponse<User>> GetUserByUserName(string userName)
+        {
+            try
+            {
+                CommonResponse<User> response = new CommonResponse<User>();
+                var existUser = await _unitOfWork.AuthenticationRepository.Find(x => x.UserName == userName);
+                if (existUser == null)
+                {
+                    response.Success = false;
+                    response.Data = null;
+                    response.Message = "Don't get any User for this username";
+                    _logger.LogError(response.Message+" : "+userName);
+                    return response;
+                }
+                response.Success = true;
+                response.Data = existUser;
+                response.Message = "User exist";
+                _logger.LogInformation(response.Message + " : " + userName);
+                return response;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw new Exception(ex.Message, ex);
+            }
+        }
     }
 }
