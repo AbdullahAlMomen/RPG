@@ -1,5 +1,6 @@
 ﻿using Business.Services.IServices;
 using DataBase.Models;
+using DataBase.Models.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<CommonResponse<List<Character>>>> GetCharacters()
         {
             _logger.LogInformation("GetCharacters api call");
-            CommonResponse<List<Character>> response = await _characterService.GetCharacters();
+            CommonResponse<List<CharacterDTO>> response = await _characterService.GetCharacters();
             return Ok(response) ;
         }
 
@@ -34,7 +35,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<CommonResponse<Character>>> GetCharacterById([FromQuery]int Id)
         {
             _logger.LogInformation("GetCharacterById api call");
-            CommonResponse<Character> response = await _characterService.GetCharacterById(Id);
+            CommonResponse<CharacterDTO> response = await _characterService.GetCharacterById(Id);
             return Ok(response);
         }
 
@@ -45,14 +46,14 @@ namespace WebAPI.Controllers
             var username = User.Claims.FirstOrDefault(x => x.Type == "UserName")?.Value;
             var user = await _authenticationService.GetUserByUserName(username);
             character.User = user.Data;
-            CommonResponse<Character> response = await _characterService.AddCharacter(character);
+            CommonResponse<CharacterDTO> response = await _characterService.AddCharacter(character);
             return Ok(response);
         }
         [HttpPut("UpdateCharacter")]
         public async Task<ActionResult<CommonResponse<Character>>> UpdateCharacter([FromBody] Character character)
         {
             _logger.LogInformation("UpdateCharacter api call");
-            CommonResponse<Character> response = await _characterService.UpdateCharacter(character);
+            CommonResponse<CharacterDTO> response = await _characterService.UpdateCharacter(character);
             return Ok(response);
         }
 
@@ -60,7 +61,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<CommonResponse<Character>>> DeleteCharacter([FromQuery] int Id)
         {
             _logger.LogInformation("DeleteCharacter api call");
-            CommonResponse<Character> response = await _characterService.DeleteCharacter(Id);
+            CommonResponse<CharacterDTO> response = await _characterService.DeleteCharacter(Id);
             return Ok(response);
         }
 

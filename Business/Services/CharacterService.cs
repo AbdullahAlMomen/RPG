@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using DataBase.UnitOfWorks;
 using DataBase;
 using DataBase.Models;
+using DataBase.Models.DTO;
 
 
 namespace Business.Services
@@ -22,14 +23,21 @@ namespace Business.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CommonResponse<Character>> AddCharacter(Character character)
+        public async Task<CommonResponse<CharacterDTO>> AddCharacter(Character character)
         {
-            CommonResponse<Character> response = new CommonResponse<Character>();
+            CommonResponse<CharacterDTO> response = new CommonResponse<CharacterDTO>();
             try
             {
                 await _unitOfWork.CharacterRepository.Add(character);
                 _unitOfWork.Save();
-                response.Data = character;
+                response.Data = new CharacterDTO()
+                {
+                    Name= character.Name,
+                    HitPoints = character.HitPoints,
+                    Strength = character.Strength,
+                    Defence = character.Defence,
+                    Class = character.Class,
+                };
                 response.Success = true;
                 response.Message = "Add Character Successfully";
                 _logger.LogInformation(response.Message);
@@ -43,9 +51,9 @@ namespace Business.Services
 
         }
 
-        public async Task<CommonResponse<Character>> DeleteCharacter(int id)
+        public async Task<CommonResponse<CharacterDTO>> DeleteCharacter(int id)
         {
-            CommonResponse<Character> response = new CommonResponse<Character>();
+            CommonResponse<CharacterDTO> response = new CommonResponse<CharacterDTO>();
             try
             {
                 Character character = await _unitOfWork.CharacterRepository.GetById(id);
@@ -53,7 +61,14 @@ namespace Business.Services
                 {
                     await _unitOfWork.CharacterRepository.Delete(character);
                     _unitOfWork.Save();
-                    response.Data = character;
+                    response.Data = new CharacterDTO()
+                    {
+                        Name = character.Name,
+                        HitPoints = character.HitPoints,
+                        Strength = character.Strength,
+                        Defence = character.Defence,
+                        Class = character.Class,
+                    };
                     response.Success = true;
                     response.Message = "Character Removed";
                     _logger.LogInformation(response.Message);
@@ -72,15 +87,15 @@ namespace Business.Services
           
         }
 
-        public async Task<CommonResponse<Character>> GetCharacterById(int id)
+        public async Task<CommonResponse<CharacterDTO>> GetCharacterById(int id)
         {
-            CommonResponse<Character> response = new CommonResponse<Character>();
+            CommonResponse<CharacterDTO> response = new CommonResponse<CharacterDTO>();
             try
             {
                 Character character = await _unitOfWork.CharacterRepository.GetById(id);
                 if (character != null)
                 {
-                    response.Data = character;
+                    response.Data = new CharacterDTO() { Name = character.Name, HitPoints = character.HitPoints, Strength = character.Strength, Defence = character.Defence, Class = character.Class };
                     response.Success = true;
                     response.Message = "Character found";
                     _logger.LogInformation(response.Message);
@@ -100,12 +115,28 @@ namespace Business.Services
 
         }
 
-        public async Task<CommonResponse<List<Character>>> GetCharacters()
+        public async Task<CommonResponse<List<CharacterDTO>>> GetCharacters()
         {
             try
             {
-                CommonResponse<List<Character>> response = new CommonResponse<List<Character>>();
-                response.Data = (List<Character>?)await _unitOfWork.CharacterRepository.GetAll();
+                CommonResponse<List<CharacterDTO>> response = new CommonResponse<List<CharacterDTO>>();
+
+                List<CharacterDTO> characterDTOs = new List<CharacterDTO>();
+                var characters= (List<Character>?)await _unitOfWork.CharacterRepository.GetAll();
+                foreach(var character in characters)
+                {
+                    CharacterDTO characterDTO = new CharacterDTO()
+                    {
+                        Name = character.Name,
+                        HitPoints = character.HitPoints,
+                        Strength = character.Strength,
+                        Defence = character.Defence,
+                        Class = character.Class,
+
+                    };
+                    characterDTOs.Add(characterDTO);
+                }
+                response.Data = characterDTOs;
                 if(response.Data.Count > 0)
                 {
                    response.Success = true;
@@ -129,9 +160,9 @@ namespace Business.Services
            
         }
 
-        public async Task<CommonResponse<Character>> UpdateCharacter(Character updatedcharacter)
+        public async Task<CommonResponse<CharacterDTO>> UpdateCharacter(Character updatedcharacter)
         {
-            CommonResponse<Character> response = new CommonResponse<Character>();
+            CommonResponse<CharacterDTO> response = new CommonResponse<CharacterDTO>();
             try
             {
                 Character character = await _unitOfWork.CharacterRepository.GetById(updatedcharacter.Id);
@@ -145,7 +176,7 @@ namespace Business.Services
                    await _unitOfWork.CharacterRepository.Update(character);
                     _unitOfWork.Save();
 
-                    response.Data = character;
+                    response.Data = new CharacterDTO() { Name = character.Name, HitPoints = character.HitPoints, Strength = character.Strength, Defence = character.Defence, Class = character.Class };
                     response.Success = true;
                     response.Message = "Character updated";
                     _logger.LogInformation(response.Message);
