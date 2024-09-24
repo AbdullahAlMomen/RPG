@@ -1,77 +1,170 @@
 {
 	"info": {
-		"_postman_id": "108c9703-65f2-4bc5-b389-52a6ae2b097b",
+		"_postman_id": "a32ce467-6f6d-49dd-b6e6-c5910a69a569",
 		"name": "EFCorePractise",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "16117716",
-		"_collection_link": "https://galactic-firefly-371622.postman.co/workspace/abc~b88d639d-077f-4def-969b-e23fcc3d7826/collection/16117716-108c9703-65f2-4bc5-b389-52a6ae2b097b?action=share&source=collection_link&creator=16117716"
+		"_collection_link": "https://galactic-firefly-371622.postman.co/workspace/abc~b88d639d-077f-4def-969b-e23fcc3d7826/collection/16117716-a32ce467-6f6d-49dd-b6e6-c5910a69a569?action=share&source=collection_link&creator=16117716"
 	},
 	"item": [
 		{
-			"name": "GetCharacters",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{server}}Character/GetCharacters",
-					"host": [
-						"{{server}}Character"
-					],
-					"path": [
-						"GetCharacters"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "GetCharacter",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{server}}Character/GetCharacterById?Id=1",
-					"host": [
-						"{{server}}Character"
-					],
-					"path": [
-						"GetCharacterById"
-					],
-					"query": [
-						{
-							"key": "Id",
-							"value": "1"
+			"name": "Character",
+			"item": [
+				{
+					"name": "Get Characters",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}Character/GetCharacters",
+							"host": [
+								"{{server}}Character"
+							],
+							"path": [
+								"GetCharacters"
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add Character",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n  \"id\": 3,\r\n  \"name\": \"Meem\",\r\n  \"hitPoints\": 10,\r\n  \"strength\": 10,\r\n  \"defence\": 10,\r\n  \"class\": 2\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{server}}Character/AddCharacter",
-					"host": [
-						"{{server}}Character"
-					],
-					"path": [
-						"AddCharacter"
-					]
+				{
+					"name": "Delete Character",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{server}}Character/DeleteCharacter?Id=1",
+							"host": [
+								"{{server}}Character"
+							],
+							"path": [
+								"DeleteCharacter"
+							],
+							"query": [
+								{
+									"key": "Id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Character",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Momen\",\r\n  \"hitPoints\": 10,\r\n  \"strength\": 10,\r\n  \"defence\": 10,\r\n  \"class\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}Character/AddCharacter",
+							"host": [
+								"{{server}}Character"
+							],
+							"path": [
+								"AddCharacter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Character",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"name\": \"Meem\",\r\n  \"hitPoints\": 10,\r\n  \"strength\": 10,\r\n  \"defence\": 10,\r\n  \"class\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}Character/UpdateCharacter",
+							"host": [
+								"{{server}}Character"
+							],
+							"path": [
+								"UpdateCharacter"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Character",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}Character/GetCharacterById?Id=2",
+							"host": [
+								"{{server}}Character"
+							],
+							"path": [
+								"GetCharacterById"
+							],
+							"query": [
+								{
+									"key": "Id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Login and Registration",
+			"item": [
+				{
+					"name": "Registration",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}Auth/UserRegistration",
+							"host": [
+								"{{server}}Auth"
+							],
+							"path": [
+								"UserRegistration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}Auth/Login",
+							"host": [
+								"{{server}}Auth"
+							],
+							"path": [
+								"Login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
