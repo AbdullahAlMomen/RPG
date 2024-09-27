@@ -9,6 +9,7 @@ using DataBase.UnitOfWorks;
 using DataBase;
 using DataBase.Models;
 using DataBase.Models.DTO;
+using AutoMapper;
 
 
 namespace Business.Services
@@ -17,10 +18,12 @@ namespace Business.Services
     {
         private ILogger<CharacterService> _logger;
         private IUnitOfWork _unitOfWork;
-        public CharacterService(ILogger<CharacterService> logger, IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public CharacterService(ILogger<CharacterService> logger, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _logger = logger;  
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public async Task<CommonResponse<CharacterDTO>> AddCharacter(Character character)
@@ -30,14 +33,7 @@ namespace Business.Services
             {
                 await _unitOfWork.CharacterRepository.Add(character);
                 _unitOfWork.Save();
-                response.Data = new CharacterDTO()
-                {
-                    Name= character.Name,
-                    HitPoints = character.HitPoints,
-                    Strength = character.Strength,
-                    Defence = character.Defence,
-                    Class = character.Class,
-                };
+                response.Data = _mapper.Map<CharacterDTO>(character);
                 response.Success = true;
                 response.Message = "Add Character Successfully";
                 _logger.LogInformation(response.Message);
@@ -61,14 +57,7 @@ namespace Business.Services
                 {
                     await _unitOfWork.CharacterRepository.Delete(character);
                     _unitOfWork.Save();
-                    response.Data = new CharacterDTO()
-                    {
-                        Name = character.Name,
-                        HitPoints = character.HitPoints,
-                        Strength = character.Strength,
-                        Defence = character.Defence,
-                        Class = character.Class,
-                    };
+                    response.Data =_mapper.Map<CharacterDTO>(character);                    
                     response.Success = true;
                     response.Message = "Character Removed";
                     _logger.LogInformation(response.Message);
@@ -95,7 +84,7 @@ namespace Business.Services
                 Character character = await _unitOfWork.CharacterRepository.GetById(id);
                 if (character != null)
                 {
-                    response.Data = new CharacterDTO() { Name = character.Name, HitPoints = character.HitPoints, Strength = character.Strength, Defence = character.Defence, Class = character.Class };
+                    response.Data = _mapper.Map<CharacterDTO>(character);
                     response.Success = true;
                     response.Message = "Character found";
                     _logger.LogInformation(response.Message);
@@ -120,23 +109,8 @@ namespace Business.Services
             try
             {
                 CommonResponse<List<CharacterDTO>> response = new CommonResponse<List<CharacterDTO>>();
-
-                List<CharacterDTO> characterDTOs = new List<CharacterDTO>();
                 var characters= (List<Character>?)await _unitOfWork.CharacterRepository.GetAll();
-                foreach(var character in characters)
-                {
-                    CharacterDTO characterDTO = new CharacterDTO()
-                    {
-                        Name = character.Name,
-                        HitPoints = character.HitPoints,
-                        Strength = character.Strength,
-                        Defence = character.Defence,
-                        Class = character.Class,
-
-                    };
-                    characterDTOs.Add(characterDTO);
-                }
-                response.Data = characterDTOs;
+                response.Data = _mapper.Map<List<CharacterDTO>>(characters);
                 if(response.Data.Count > 0)
                 {
                    response.Success = true;
@@ -176,7 +150,7 @@ namespace Business.Services
                    await _unitOfWork.CharacterRepository.Update(character);
                     _unitOfWork.Save();
 
-                    response.Data = new CharacterDTO() { Name = character.Name, HitPoints = character.HitPoints, Strength = character.Strength, Defence = character.Defence, Class = character.Class };
+                    response.Data = _mapper.Map<CharacterDTO>(character);
                     response.Success = true;
                     response.Message = "Character updated";
                     _logger.LogInformation(response.Message);
